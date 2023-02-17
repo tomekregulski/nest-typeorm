@@ -33,7 +33,7 @@ export class UsersService {
 
   // returns array of all entries that match the criteria, or an empty array
   find(email: string) {
-    return this.repo.find({ where: { email }});
+    return this.repo.find({ where: { email } });
   }
 
   // Pull out the matching user, apply the incoming changes, and save that user to the DB

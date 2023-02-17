@@ -11,6 +11,7 @@ import { CurrentUserInterceptor } from './interceptors/current-user.interceptor'
   // Creates the repository between user module and entity
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
+  // all existing classes that we may want to inject into our DI container, so the DI container can figure out how to create any instance that we want
   providers: [
     UsersService,
     AuthService,

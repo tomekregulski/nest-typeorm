@@ -24,6 +24,7 @@ import { Report } from './reports/report.entity';
     ReportsModule,
   ],
   controllers: [AppController],
+  // all existing classes that we may want to inject into our DI container, so the DI container can figure out how to create any instance that we want
   providers: [AppService],
 })
 export class AppModule {}
