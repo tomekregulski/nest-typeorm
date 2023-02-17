@@ -17,6 +17,8 @@ export class ReportDto {
   model: string;
   @Expose()
   mileage: string;
+  @Expose()
+  approved: boolean;
 
   // obj is a reference to the original report entity
   // we pull that in, grab the user property, pull out the id, and assign it to userId
