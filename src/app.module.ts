@@ -10,7 +10,6 @@ import { User } from './users/user.entity';
 import { Report } from './reports/report.entity';
 import { TypeOrmConfigService } from './config/typeorm.config';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const dbConfig = require('../ormconfig.js');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
 
