@@ -64,12 +64,13 @@ const cookieSession = require('cookie-session');
   ],
 })
 export class AppModule {
+  constructor(private configService: ConfigService) {}
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
         cookieSession({
           // key used to encrypt the information stored in the cookie
-          keys: ['asdfgh'],
+          keys: [this.configService.get('COOKIE_KEY')],
         }),
         // make use of this middleware on every request in the app
       )
