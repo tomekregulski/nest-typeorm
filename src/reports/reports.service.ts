@@ -4,6 +4,7 @@ import { User } from '../users/user.entity';
 import { Repository } from 'typeorm';
 import { CreateReportDto } from './dtos/create-report.dto';
 import { Report } from './report.entity';
+import { GetEstimateDto } from './dtos/get-estimate.dto';
 
 @Injectable()
 export class ReportsService {
@@ -26,5 +27,34 @@ export class ReportsService {
 
     report.approved = approved;
     return this.repo.save(report);
+  }
+
+  async createEstimate({
+    make,
+    model,
+    lng,
+    lat,
+    mileage,
+    year,
+  }: GetEstimateDto) {
+    return (
+      this.repo
+        // Return a single row, showing an average of the top three records that match this criteria
+        .createQueryBuilder()
+        .select('AVG(price)', 'price')
+        .where('make = :make', { make })
+        // can't just chain "where" functions - need to use "andWhere" for multiple conditions
+        .andWhere('model = :model', { model })
+        .andWhere('lng - :lng BETWEEN -5 AND 5', { lng })
+        .andWhere('lat - :lat BETWEEN -5 AND 5', { lat })
+        .andWhere('year - :year BETWEEN -3 AND 3', { year })
+        // .andWhere('approved IS TRUE')
+        // ABS allows orderBy to take into account both greater thana nd less than entries
+        .orderBy('ABS(mileage - :mileage)', 'DESC')
+        // orderBy does not take second argument, so we use setParameters
+        .setParameters({ mileage })
+        .limit(3)
+        .getRawMany()
+    );
   }
 }
