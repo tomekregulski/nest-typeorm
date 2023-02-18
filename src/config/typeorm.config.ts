@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import {
+  TypeOrmModule,
+  TypeOrmModuleOptions,
+  TypeOrmOptionsFactory,
+} from '@nestjs/typeorm';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -29,18 +33,16 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     }
     if (process.env.NODE_ENV === 'production') {
       const obj = {
-        type: this.configService.get<any>('DB_TYPE'),
-        synchronize: JSON.parse(this.configService.get<string>('SYNCHRONIZE')),
+        type: 'postgres',
+        synchronize: false,
         url: process.env.DATABASE_URL,
         // autoLoadEntities: true,
         entities: ['**/*.entity.js'],
-        migrationsRun: JSON.parse(
-          this.configService.get<string>('MIGRATIONS_RUN'),
-        ),
+        migrationsRun: true,
         ssl: {
-          rejectUnauthorized: JSON.parse(this.configService.get<string>('SSL')),
+          rejectUnauthorized: false,
         },
-      };
+      } as TypeOrmModule;
       console.log(obj);
       return obj;
     }
