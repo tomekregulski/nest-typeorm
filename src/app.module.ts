@@ -8,8 +8,13 @@ import { UsersModule } from './users/users.module';
 import { ReportsModule } from './reports/reports.module';
 import { User } from './users/user.entity';
 import { Report } from './reports/report.entity';
+import { TypeOrmConfigService } from './config/typeorm.config';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const dbConfig = require('../ormconfig.js');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
+
+// console.log(dbConfig);
 
 @Module({
   imports: [
@@ -17,24 +22,31 @@ const cookieSession = require('cookie-session');
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    // final env-specific version
+    // TypeOrmModule.forRoot(),
+    // second, better version
+    // TypeOrmModule.forRootAsync({
+    //   // this tells the DI system to find the configuration service, which will have all of our config info, from the chosen file,
+    //   //and we want to get access to that instance of the SonfigService during the setup of our TypeOrm module
+    //   inject: [ConfigService],
+    //   // function that receives an instance of our ConfigService (this is the DI part), which will have the desired ENV information
+    //   useFactory: (config: ConfigService) => {
+    //     return {
+    //       type: 'sqlite',
+    //       database: config.get<string>('DB_NAME'),
+    //       entities: [User, Report],
+    //       // Why synchronize?
+    //       // Prevents need to run migrations in development
+    //       // Instead, every time the app starts up, it will recreate the tables based on the configuration at the time.
+    //       // After deployment - can we still use this in development???
+    //       synchronize: true,
+    //     };
+    //   },
+    // }),
     TypeOrmModule.forRootAsync({
-      // this tells the DI system to find the configuration service, which will have all of our config info, from the chosen file,
-      //and we want to get access to that instance of the SonfigService during the setup of our TypeOrm module
-      inject: [ConfigService],
-      // function that receives an instance of our ConfigService (this is the DI part), which will have the desired ENV information
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'sqlite',
-          database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
-          // Why synchronize?
-          // Prevents need to run migrations in development
-          // Instead, every time the app starts up, it will recreate the tables based on the configuration at the time.
-          // After deployment - can we still use this in development???
-          synchronize: true,
-        };
-      },
+      useClass: TypeOrmConfigService,
     }),
+    // old version
     // creates the DB connection for entire app
     // TypeOrmModule.forRoot({
     //   type: 'sqlite',
