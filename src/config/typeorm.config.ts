@@ -36,7 +36,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         type: 'postgres',
         synchronize: false,
         url: process.env.DATABASE_URL,
-        // autoLoadEntities: true,
+        autoLoadEntities: true,
         entities: ['**/*.entity.js'],
         migrationsRun: true,
         ssl: {
